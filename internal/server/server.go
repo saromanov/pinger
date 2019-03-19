@@ -24,7 +24,7 @@ func (s *server) createAccount() http.HandleFunc {
 		if err != nil {
 			return
 		}
-		err = s.hand.CreateAccount(&models.Account{
+		_, err = s.hand.CreateAccount(&models.Account{
 			Email: account.Email,
 			Password: account.Password,
 			Name: account.Name,
