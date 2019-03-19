@@ -27,7 +27,16 @@ func (s *server) createAccount() http.HandleFunc {
 	}
 }
 
-// Create makes http endpoints and handler
-func Create() {
+func (s *server) makeHandlers() {
+	s.router.HandleFunc("/v1/users", s.createAccount)
+}
 
+// Create makes http endpoints and handler
+func Create(h *handler.Handler) {
+	r := mux.NewRouter()
+	s := &server{
+		hand:   h,
+		router: r,
+	}
+	s.makeHandlers()
 }
