@@ -10,17 +10,17 @@ import (
 // CreateAccount provides creating of the new user
 // Its generate a new bassword with bcrypt library
 // and then, add to the storage
-func (h *Handler) CreateAccount(u *models.Account) error {
+func (h *Handler) CreateAccount(u *models.Account) (string, error) {
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.Wrap(err, "unable to hash password")
+		return "", errors.Wrap(err, "unable to hash password")
 	}
 	u.Password = string(pass)
 
 	if err := h.Storage.InsertAccount(u); err != nil {
-		return errors.Wrap(err, "unable to create account")
+		return "", errors.Wrap(err, "unable to create account")
 	}
-	return createJWTToken(acc)
+	return createJWTToken(u), nil
 }
 
 // Login provides auth for the user
@@ -31,17 +31,17 @@ func (h *Handler) Login(email, password string) (*models.Account, error) {
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(password))
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return errors.Wrap(err, "invalid login credentials")
+		return nil, errors.Wrap(err, "invalid login credentials")
 	}
 	acc.Password = ""
-	return createJWTToken(acc), nil
+	acc.Token = createJWTToken(acc)
+	return acc, nil
 }
 
 // creating of the jwt token
-func createJWTToken(u *models.Account) *models.Account {
+func createJWTToken(u *models.Account) string {
 	tk := &models.Token{UserID: u.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte("testtoken"))
-	u.Token = tokenString
-	return u
+	return tokenString
 }
