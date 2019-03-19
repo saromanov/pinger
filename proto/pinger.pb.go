@@ -20,73 +20,92 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type User struct {
+type Account struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	Token                string   `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	Password             string   `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	Name                 string   `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *User) Reset()         { *m = User{} }
-func (m *User) String() string { return proto.CompactTextString(m) }
-func (*User) ProtoMessage()    {}
-func (*User) Descriptor() ([]byte, []int) {
+func (m *Account) Reset()         { *m = Account{} }
+func (m *Account) String() string { return proto.CompactTextString(m) }
+func (*Account) ProtoMessage()    {}
+func (*Account) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e0fa9ff67baabf60, []int{0}
 }
 
-func (m *User) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_User.Unmarshal(m, b)
+func (m *Account) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Account.Unmarshal(m, b)
 }
-func (m *User) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_User.Marshal(b, m, deterministic)
+func (m *Account) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Account.Marshal(b, m, deterministic)
 }
-func (m *User) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_User.Merge(m, src)
+func (m *Account) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Account.Merge(m, src)
 }
-func (m *User) XXX_Size() int {
-	return xxx_messageInfo_User.Size(m)
+func (m *Account) XXX_Size() int {
+	return xxx_messageInfo_Account.Size(m)
 }
-func (m *User) XXX_DiscardUnknown() {
-	xxx_messageInfo_User.DiscardUnknown(m)
+func (m *Account) XXX_DiscardUnknown() {
+	xxx_messageInfo_Account.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_User proto.InternalMessageInfo
+var xxx_messageInfo_Account proto.InternalMessageInfo
 
-func (m *User) GetId() string {
+func (m *Account) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *User) GetEmail() string {
+func (m *Account) GetEmail() string {
 	if m != nil {
 		return m.Email
 	}
 	return ""
 }
 
-func (m *User) GetToken() string {
+func (m *Account) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
 	return ""
 }
 
+func (m *Account) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+func (m *Account) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 func init() {
-	proto.RegisterType((*User)(nil), "User")
+	proto.RegisterType((*Account)(nil), "Account")
 }
 
 func init() { proto.RegisterFile("pinger.proto", fileDescriptor_e0fa9ff67baabf60) }
 
 var fileDescriptor_e0fa9ff67baabf60 = []byte{
-	// 94 bytes of a gzipped FileDescriptorProto
+	// 129 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0xc8, 0xcc, 0x4b,
-	0x4f, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57, 0x72, 0xe2, 0x62, 0x09, 0x2d, 0x4e, 0x2d,
-	0x12, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x62, 0xca, 0x4c,
-	0x11, 0x12, 0xe1, 0x62, 0x4d, 0xcd, 0x4d, 0xcc, 0xcc, 0x91, 0x60, 0x02, 0x0b, 0x41, 0x38, 0x20,
-	0xd1, 0x92, 0xfc, 0xec, 0xd4, 0x3c, 0x09, 0x66, 0x88, 0x28, 0x98, 0x93, 0xc4, 0x06, 0x36, 0xca,
-	0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0xed, 0xee, 0xe5, 0xaa, 0x5a, 0x00, 0x00, 0x00,
+	0x4f, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57, 0x2a, 0xe5, 0x62, 0x77, 0x4c, 0x4e, 0xce,
+	0x2f, 0xcd, 0x2b, 0x11, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c,
+	0x62, 0xca, 0x4c, 0x11, 0x12, 0xe1, 0x62, 0x4d, 0xcd, 0x4d, 0xcc, 0xcc, 0x91, 0x60, 0x02, 0x0b,
+	0x41, 0x38, 0x20, 0xd1, 0x92, 0xfc, 0xec, 0xd4, 0x3c, 0x09, 0x66, 0x88, 0x28, 0x98, 0x23, 0x24,
+	0xc5, 0xc5, 0x51, 0x90, 0x58, 0x5c, 0x5c, 0x9e, 0x5f, 0x94, 0x22, 0xc1, 0x02, 0x96, 0x80, 0xf3,
+	0x85, 0x84, 0xb8, 0x58, 0xf2, 0x12, 0x73, 0x53, 0x25, 0x58, 0xc1, 0xe2, 0x60, 0x76, 0x12, 0x1b,
+	0xd8, 0x76, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xea, 0xf2, 0xd1, 0x70, 0x8d, 0x00, 0x00,
+	0x00,
 }

@@ -14,6 +14,7 @@ type Account struct {
 	Password  string
 	CreatedAt time.Time
 	Token string
+	Name string
 }
 
 // Token represents jwt token

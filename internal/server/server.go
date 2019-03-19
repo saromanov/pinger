@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/internal/handler"
 	"github.com/saromanov/pinger/internal/models"
+	"github.com/saromanov/pinger/proto"
 )
 
 type server struct {
@@ -17,13 +18,17 @@ type server struct {
 
 // createAccount makes a new account
 func (s *server) createAccount() http.HandleFunc {
-	account := &models.Account{}
+	account := &proto.Account{}
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+		err := json.NewDecoder(r.Body).Decode(account)
 		if err != nil {
 			return
 		}
-		err = s.hand.CreateAccount(account)
+		err = s.hand.CreateAccount(&models.Account{
+			Email: account.Email,
+			Password: account.Password,
+			Name: account.Name,
+		})
 		if err != nil {
 			return
 		}
