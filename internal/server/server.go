@@ -23,7 +23,10 @@ func (s *server) createAccount() http.HandleFunc {
 		if err != nil {
 			return
 		}
-		resp := account.Create()
+		err = s.hand.CreateAccount(account)
+		if err != nil {
+			return
+		}
 	}
 }
 
