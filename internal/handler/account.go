@@ -20,7 +20,21 @@ func (h *Handler) CreateAccount(u *models.Account) error {
 	if err := h.Storage.InsertAccount(u); err != nil {
 		return errors.Wrap(err, "unable to create account")
 	}
-	return nil
+	return createJWTToken(acc)
+}
+
+// Login provides auth for the user
+func (h *Handler) Login(email, password string) (*models.Account, error) {
+	acc, err := h.Storage.GetAccount(email)
+	if err != nil {
+		return nil, err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(password))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return errors.Wrap(err, "invalid login credentials")
+	}
+	acc.Password = ""
+	return createJWTToken(acc), nil
 }
 
 // creating of the jwt token
