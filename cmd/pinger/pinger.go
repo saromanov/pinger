@@ -5,20 +5,20 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/saromanov/pinger/internal/server"
-	"github.com/saromanov/pinger/internal/handler"
-	"github.com/saromanov/pinger/internal/storage"
 	"github.com/saromanov/pinger/config"
+	"github.com/saromanov/pinger/internal/handler"
+	"github.com/saromanov/pinger/internal/server"
+	"github.com/saromanov/pinger/internal/storage"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 )
 
-
 func run(c *config.Config) error {
-	st, err := &storage.New(c)
+	st, err := storage.New(c)
 	if err != nil {
 		return err
 	}
+	defer st.Close()
 	h, err := handler.New(st)
 	if err != nil {
 		return err
