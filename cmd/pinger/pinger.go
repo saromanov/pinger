@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/saromanov/pinger/internal/server"
+	"github.com/saromanov/pinger/internal/handler"
+	"github.com/saromanov/pinger/internal/storage"
 	"github.com/saromanov/pinger/config"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
@@ -13,11 +15,16 @@ import (
 
 
 func run(c *config.Config) error {
-	app, err := app.New(c)
+	st, err := &storage.New(c)
 	if err != nil {
-		return fmt.Errorf("unable to init app: %v", err)
+		return err
 	}
-	setupServer(app, c)
+	h, err := handler.New(st)
+	if err != nil {
+		return err
+	}
+
+	server.New(h)
 	return nil
 }
 
