@@ -17,22 +17,19 @@ type server struct {
 }
 
 // createAccount makes a new account
-func (s *server) createAccount() func(http.ResponseWriter,
-	*http.Request) {
+func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 	account := &pb.Account{}
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := json.NewDecoder(r.Body).Decode(account)
-		if err != nil {
-			return
-		}
-		_, err = s.hand.CreateAccount(&models.Account{
-			Email:    account.Email,
-			Password: account.Password,
-			Name:     account.Name,
-		})
-		if err != nil {
-			return
-		}
+	err := json.NewDecoder(r.Body).Decode(account)
+	if err != nil {
+		return
+	}
+	_, err = s.hand.CreateAccount(&models.Account{
+		Email:    account.Email,
+		Password: account.Password,
+		Name:     account.Name,
+	})
+	if err != nil {
+		return
 	}
 }
 
