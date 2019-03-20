@@ -18,17 +18,24 @@ func (s *Storage) GetSites(req GetSitesRequest) ([]*models.Site, error) {
 	if req.UserID == "" {
 		return s.getAllSites(req)
 	}
+	return s.getUserSites(req)
+}
+
+// getAllSites needs for inner logic for checking site availibility
+// Its getting batch of sites at one time
+func (s *Storage) getAllSites(req GetSitesRequest) ([]*models.Site, error) {
 	var sites []*models.Site
-	err := s.db.Where("user_id = ?", req.UserID).Find(&sites).Error
+	err := s.db.Limit(req.Limit).Offset(req.Offset).Find(&sites).Error
 	if err != nil {
 		return nil, errors.Wrap(err, "storage: unable to find sites")
 	}
 	return sites, nil
 }
 
-func (s *Storage) getAllSites(req GetSitesRequest) ([]*models.Site, error) {
+// getUserSites returns sites which user registered
+func (s *Storage) getUserSites(req GetSitesRequest) ([]*models.Site, error) {
 	var sites []*models.Site
-	err := s.db.Limit(req.Limit).Offset(req.Offset).Find(&sites).Error
+	err := s.db.Where("user_id = ?", req.UserID).Find(&sites).Error
 	if err != nil {
 		return nil, errors.Wrap(err, "storage: unable to find sites")
 	}
