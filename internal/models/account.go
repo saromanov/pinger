@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 )
@@ -10,11 +8,10 @@ import (
 // Account represents user's account
 type Account struct {
 	gorm.Model
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	Token string
-	Name string
+	Email    string
+	Password string
+	Token    string
+	Name     string
 }
 
 // Token represents jwt token
