@@ -11,7 +11,10 @@ import (
 	"github.com/saromanov/pinger/internal/models"
 )
 
-var errNoConfig = errors.New("config is not defined")
+var (
+	errNoConfig = errors.New("config is not defined")
+	errNoCreds = errors.New("name, passwotd or user is not defined for storage")
+)
 
 // Storage implements db handling with Postgesql
 type Storage struct {
@@ -22,6 +25,9 @@ type Storage struct {
 func New(s *config.Config) (*Storage, error) {
 	if s == nil {
 		return nil, errNoConfig
+	}
+	if s.Name == "" || s.Password == "" || s.User == "" {
+		return nil, errNoCreds
 	}
 	args := "dbname=pinger"
 	if s.Name != "" && s.Password != "" && s.User != "" {
