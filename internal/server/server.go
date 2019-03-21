@@ -2,19 +2,23 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/internal/handler"
-	"github.com/saromanov/pinger/internal/models"
 	"github.com/saromanov/pinger/internal/log"
+	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
 
 type server struct {
-	hand   *handler.Handler
-	router *mux.Router
+	hand    *handler.Handler
+	router  *mux.Router
 	address string
 }
 
@@ -39,29 +43,29 @@ func (s *server) makeHandlers() {
 	s.router.HandleFunc("/v1/users", s.createAccount)
 }
 
-func (s *server) startServer(){
-	log.Infof("server is started at %s", )
+func (s *server) startServer() {
+	log.Infof("server is started at %s")
 	srv := &http.Server{
-        Addr:         s.address,
-        WriteTimeout: time.Second * 15,
-        ReadTimeout:  time.Second * 15,
-        IdleTimeout:  time.Second * 60,
-        Handler: s.rounter,
+		Addr:         s.address,
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      s.router,
 	}
-	
-    go func() {
-        if err := srv.ListenAndServe(); err != nil {
-            log.Error(err.Error())
-        }
-    }()
 
-    c := make(chan os.Signal, 1)
-    signal.Notify(c, os.Interrupt)
-    <-c
-    ctx, cancel := context.WithTimeout(context.Background(), wait)
-    defer cancel()
-    srv.Shutdown(ctx)
-    log.Info("shutting down server")
+	go func() {
+		if err := srv.ListenAndServe(); err != nil {
+			log.Error(err.Error())
+		}
+	}()
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	<-c
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	srv.Shutdown(ctx)
+	log.Info("shutting down server")
 }
 
 // New makes http endpoints and handler
@@ -72,4 +76,5 @@ func New(h *handler.Handler) {
 		router: r,
 	}
 	s.makeHandlers()
+	s.startServer()
 }
