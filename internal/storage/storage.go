@@ -13,7 +13,7 @@ import (
 
 var (
 	errNoConfig = errors.New("config is not defined")
-	errNoCreds = errors.New("name, passwotd or user is not defined for storage")
+	errNoCreds  = errors.New("name, password or user is not defined for storage")
 )
 
 // Storage implements db handling with Postgesql
