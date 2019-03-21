@@ -8,12 +8,14 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/internal/handler"
 	"github.com/saromanov/pinger/internal/models"
+	"github.com/saromanov/pinger/internal/log"
 	pb "github.com/saromanov/pinger/proto"
 )
 
 type server struct {
 	hand   *handler.Handler
 	router *mux.Router
+	address string
 }
 
 // createAccount makes a new account
@@ -35,6 +37,31 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) makeHandlers() {
 	s.router.HandleFunc("/v1/users", s.createAccount)
+}
+
+func (s *server) startServer(){
+	log.Infof("server is started at %s", )
+	srv := &http.Server{
+        Addr:         s.address,
+        WriteTimeout: time.Second * 15,
+        ReadTimeout:  time.Second * 15,
+        IdleTimeout:  time.Second * 60,
+        Handler: s.rounter,
+	}
+	
+    go func() {
+        if err := srv.ListenAndServe(); err != nil {
+            log.Error(err.Error())
+        }
+    }()
+
+    c := make(chan os.Signal, 1)
+    signal.Notify(c, os.Interrupt)
+    <-c
+    ctx, cancel := context.WithTimeout(context.Background(), wait)
+    defer cancel()
+    srv.Shutdown(ctx)
+    log.Info("shutting down server")
 }
 
 // New makes http endpoints and handler
