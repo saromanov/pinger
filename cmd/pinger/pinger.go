@@ -39,7 +39,6 @@ func parseConfig(path string) (*config.Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse .config.yml: %v", err)
 	}
-	fmt.Println(c)
 
 	return c, nil
 }

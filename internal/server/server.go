@@ -45,7 +45,7 @@ func (s *server) makeHandlers() {
 }
 
 func (s *server) startServer() {
-	log.Infof("server is started at %s")
+	log.Infof("server is started at %s", s.address)
 	srv := &http.Server{
 		Addr:         s.address,
 		WriteTimeout: time.Second * 15,
@@ -73,8 +73,9 @@ func (s *server) startServer() {
 func New(h *handler.Handler, c *config.Config) {
 	r := mux.NewRouter()
 	s := &server{
-		hand:   h,
-		router: r,
+		hand:    h,
+		router:  r,
+		address: c.Address,
 	}
 	s.makeHandlers()
 	s.startServer()
