@@ -24,7 +24,7 @@ func run(c *config.Config) error {
 		return err
 	}
 
-	server.New(h)
+	server.New(h, c)
 	return nil
 }
 

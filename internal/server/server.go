@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/saromanov/pinger/config"
 	"github.com/saromanov/pinger/internal/handler"
 	"github.com/saromanov/pinger/internal/log"
 	"github.com/saromanov/pinger/internal/models"
@@ -69,7 +70,7 @@ func (s *server) startServer() {
 }
 
 // New makes http endpoints and handler
-func New(h *handler.Handler) {
+func New(h *handler.Handler, c *config.Config) {
 	r := mux.NewRouter()
 	s := &server{
 		hand:   h,
