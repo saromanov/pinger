@@ -9,6 +9,7 @@ import (
 	"github.com/saromanov/pinger/internal/handler"
 	"github.com/saromanov/pinger/internal/server"
 	"github.com/saromanov/pinger/internal/storage"
+	"github.com/saromanov/pinger/internal/core"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 )
@@ -23,7 +24,7 @@ func run(c *config.Config) error {
 	if err != nil {
 		return err
 	}
-
+	go core.New(h)
 	server.New(h, c)
 	return nil
 }
