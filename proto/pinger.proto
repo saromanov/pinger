@@ -12,3 +12,8 @@ message Site {
     int64 id = 1;
     string url = 2;
 }
+
+message GetSitesRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+}
