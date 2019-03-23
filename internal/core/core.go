@@ -8,6 +8,7 @@ import (
 
 	"github.com/robfig/cron"
 	"github.com/saromanov/pinger/internal/handler"
+	"github.com/saromanov/pinger/internal/log"
 	pb "github.com/saromanov/pinger/proto"
 )
 
@@ -23,6 +24,11 @@ func (c *Core) checker() {
 	sites, err := c.hand.GetSites(&pb.GetSitesRequest{})
 	if err != nil {
 		panic(fmt.Sprintf("unable to get list of sites: %v", err))
+	}
+
+	if len(sites) == 0 {
+		log.Info("core: site's db is empty")
+		return
 	}
 
 	batches := len(sites) / batchSize
@@ -45,7 +51,7 @@ func (c *Core) checker() {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1s", func() { fmt.Println("Every 1 second") })
+	cr.AddFunc("@every 1s", c.checker)
 	cr.Start()
 }
 
