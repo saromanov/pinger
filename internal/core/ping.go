@@ -9,7 +9,7 @@ import (
 
 var errSiteNotAvailable = errors.New("site is not available")
 
-// ping provides sending..
+// ping provides sending request to the site
 func ping(url string) error {
 	pinger, err := goping.NewPinger(url)
 	if err != nil {
