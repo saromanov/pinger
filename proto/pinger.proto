@@ -9,6 +9,6 @@ message Account {
 }
 
 message Site {
-    string id = 1;
+    int64 id = 1;
     string url = 2;
 }
