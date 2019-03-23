@@ -32,9 +32,12 @@ func (c *Core) checker() {
 		wg.Add(batches)
 		for _, site := range sites[it : it+20] {
 			go func(s *pb.Site) {
-				ping(s.URL)
+				ping(s.Url)
+				wg.Done()
 			}(site)
 		}
+
+		wg.Wait()
 		it += 20
 	}
 }
