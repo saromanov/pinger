@@ -4,6 +4,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -40,8 +41,11 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 		Name:     account.Name,
 	})
 	if err != nil {
+		http.Error(w, fmt.Sprintf("unable to create account: %v", err), http.StatusBadRequest)
 		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (s *server) makeHandlers() {
