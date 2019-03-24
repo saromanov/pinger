@@ -51,7 +51,7 @@ func (c *Core) checker() {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1s", c.checker)
+	cr.AddFunc("@every 3m", c.checker)
 	cr.Start()
 }
 
