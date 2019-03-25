@@ -7,6 +7,15 @@ import (
 	pb "github.com/saromanov/pinger/proto"
 )
 
+// CreateSite provides creating of the new site
+// for checking of availability. It should be attached to user
+func (h *Handler) CreateSite(u *models.Site) (string, error) {
+	if err := h.Storage.InsertAccount(u); err != nil {
+		return "", errors.Wrap(err, "unable to create site")
+	}
+	return createJWTToken(u), nil
+}
+
 // GetSites returns list of the sites based on request
 func (h *Handler) GetSites(r *pb.GetSitesRequest) ([]*pb.Site, error) {
 	sites, err := h.Storage.GetSites(storage.GetSitesRequest{
