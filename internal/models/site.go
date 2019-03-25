@@ -6,4 +6,5 @@ import "github.com/jinzhu/gorm"
 type Site struct {
 	gorm.Model
 	URL string
+	UserID string
 }
