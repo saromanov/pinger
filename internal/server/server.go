@@ -48,6 +48,28 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// createSite makes a new site for user
+func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
+	site := &pb.Site{}
+	err := json.NewDecoder(r.Body).Decode(site)
+	if err != nil {
+		return
+	}
+	if site.Url == "" {
+		http.Error(w, "url is not defined", http.StatusBadRequest)
+		return
+	}
+	_, err = s.hand.CreateAccount(&models.Account{
+		URL: site.Url,
+	})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("unable to create account: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
 func (s *server) makeHandlers() {
 	s.router.HandleFunc("/v1/users", s.createAccount)
 }
