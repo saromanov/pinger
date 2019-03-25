@@ -4,6 +4,7 @@ package handler
 
 import (
 	"errors"
+
 	"github.com/saromanov/pinger/internal/storage"
 )
 

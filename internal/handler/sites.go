@@ -10,10 +10,10 @@ import (
 // CreateSite provides creating of the new site
 // for checking of availability. It should be attached to user
 func (h *Handler) CreateSite(u *models.Site) (string, error) {
-	if err := h.Storage.InsertAccount(u); err != nil {
+	if err := h.Storage.InsertSite(u); err != nil {
 		return "", errors.Wrap(err, "unable to create site")
 	}
-	return createJWTToken(u), nil
+	return "", nil
 }
 
 // GetSites returns list of the sites based on request
