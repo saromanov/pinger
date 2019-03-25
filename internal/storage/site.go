@@ -13,6 +13,15 @@ type GetSitesRequest struct {
 	UserID string
 }
 
+// InsertSite provides inserting of site
+func (s *Storage) InsertSite(m interface{}) error {
+	err := s.db.Create(m).Error
+	if err != nil {
+		return errors.Wrap(err, "storage: unable to insert site")
+	}
+	return nil
+}
+
 // GetSites returns list of sites
 func (s *Storage) GetSites(req GetSitesRequest) ([]*models.Site, error) {
 	if req.UserID == "" {
