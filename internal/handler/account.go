@@ -14,11 +14,8 @@ var errNoPassword = errors.New("password is not defined")
 // Its generate a new bassword with bcrypt library
 // and then, add to the storage
 func (h *Handler) CreateAccount(u *models.Account) (string, error) {
-	if err := validateEmail(u.Email); err != nil {
+	if err := validateCreds(u); err != nil {
 		return "", err
-	}
-	if u.Password == "" {
-		return "", errNoPassword
 	}
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -50,6 +47,19 @@ func (h *Handler) Login(email, password string) (*models.Account, error) {
 	acc.Password = ""
 	acc.Token = createJWTToken(acc)
 	return acc, nil
+}
+
+// validateCreds provides validation of the input data
+// for account
+func validateCreds(u *models.Account) error {
+	if err := validateEmail(u.Email); err != nil {
+		return err
+	}
+	if u.Password == "" {
+		return errNoPassword
+	}
+
+	return nil
 }
 
 // validateEmail provides validation of email format
