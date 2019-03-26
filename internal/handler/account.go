@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/badoux/checkmail"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
@@ -24,9 +25,13 @@ func (h *Handler) CreateAccount(u *models.Account) (string, error) {
 }
 
 // Login provides auth for the user
+// It contains validation of email and generating of password hash
 func (h *Handler) Login(email, password string) (*models.Account, error) {
 	acc, err := h.Storage.GetAccount(email)
 	if err != nil {
+		return nil, err
+	}
+	if err := validateEmail(email); err != nil {
 		return nil, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(password))
@@ -40,6 +45,15 @@ func (h *Handler) Login(email, password string) (*models.Account, error) {
 	acc.Password = ""
 	acc.Token = createJWTToken(acc)
 	return acc, nil
+}
+
+// validateEmail provides validation of email format
+func validateEmail(email string) error {
+	if err := checkmail.ValidateFormat(email); err != nil {
+		return errors.Wrap(err, "unable to validate email format")
+	}
+
+	return nil
 }
 
 // creating of the jwt token
