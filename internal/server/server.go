@@ -26,6 +26,7 @@ type server struct {
 
 // createAccount makes a new account
 func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	account := &pb.Account{}
 	err := json.NewDecoder(r.Body).Decode(account)
 	if err != nil {
