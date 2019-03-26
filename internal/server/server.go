@@ -47,6 +47,10 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
+	writeResponse(w, AccountResponse{
+		ID:          "123",
+		CreatedTime: time.Now().UTC(),
+	})
 }
 
 // createSite makes a new site for user
