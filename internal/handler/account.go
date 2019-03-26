@@ -30,8 +30,12 @@ func (h *Handler) Login(email, password string) (*models.Account, error) {
 		return nil, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(password))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return nil, errors.Wrap(err, "invalid login credentials")
+	if err != nil {
+		if err == bcrypt.ErrMismatchedHashAndPassword {
+			return nil, errors.Wrap(err, "invalid login credentials")
+		}
+
+		return nil, errors.Wrap(err, "unknown error on compare password hash")
 	}
 	acc.Password = ""
 	acc.Token = createJWTToken(acc)
