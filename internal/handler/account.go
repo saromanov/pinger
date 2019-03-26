@@ -8,12 +8,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var errNoPassword = errors.New("password is not defined")
+
 // CreateAccount provides creating of the new user
 // Its generate a new bassword with bcrypt library
 // and then, add to the storage
 func (h *Handler) CreateAccount(u *models.Account) (string, error) {
 	if err := validateEmail(u.Email); err != nil {
 		return "", err
+	}
+	if u.Password == "" {
+		return "", errNoPassword
 	}
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
