@@ -12,6 +12,9 @@ import (
 // Its generate a new bassword with bcrypt library
 // and then, add to the storage
 func (h *Handler) CreateAccount(u *models.Account) (string, error) {
+	if err := validateEmail(u.Email); err != nil {
+		return "", err
+	}
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", errors.Wrap(err, "unable to hash password")
@@ -29,9 +32,6 @@ func (h *Handler) CreateAccount(u *models.Account) (string, error) {
 func (h *Handler) Login(email, password string) (*models.Account, error) {
 	acc, err := h.Storage.GetAccount(email)
 	if err != nil {
-		return nil, err
-	}
-	if err := validateEmail(email); err != nil {
 		return nil, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(password))
