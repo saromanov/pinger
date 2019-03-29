@@ -74,14 +74,15 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 
 	resp := &AccountResponse{
 		CreatedTime: time.Now().UTC(),
-		ID: "",
+		ID:          "",
 	}
 
-	res, err := json.Marshal(resp)
+	data, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("unable to marshal data: %v", err), http.StatusBadRequest)
 		return
 	}
+	fmt.Fprintf(w, string(data))
 	w.WriteHeader(http.StatusCreated)
 }
 
