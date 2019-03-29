@@ -23,7 +23,7 @@ func (h *Handler) CreateAccount(u *models.Account) (string, error) {
 	}
 	u.Password = string(pass)
 
-	if err := h.Storage.InsertAccount(u); err != nil {
+	if _, err := h.Storage.InsertAccount(u); err != nil {
 		return "", errors.Wrap(err, "unable to create account")
 	}
 	return createJWTToken(u), nil

@@ -6,12 +6,13 @@ import (
 )
 
 // InsertAccount provides inserting of account
-func (s *Storage) InsertAccount(m interface{}) error {
-	err := s.db.Create(m).Error
+func (s *Storage) InsertAccount(m interface{}) (uint, error) {
+	resp := &models.Account{}
+	err := s.db.Create(m).Scan(resp).Error
 	if err != nil {
-		return errors.Wrap(err, "storage: unable to insert user")
+		return 0, errors.Wrap(err, "storage: unable to insert user")
 	}
-	return nil
+	return resp.ID, nil
 }
 
 // GetAccount returns account by id
