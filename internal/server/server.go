@@ -10,6 +10,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/jwtauth"
 	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/config"
 	"github.com/saromanov/pinger/internal/handler"
@@ -17,6 +19,8 @@ import (
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
+
+var tokenAuth *jwtauth.JWTAuth
 
 type server struct {
 	hand    *handler.Handler
@@ -88,7 +92,20 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) makeHandlers() {
-	s.router.HandleFunc("/v1/users", s.createAccount)
+	r := chi.NewRouter()
+	r.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(tokenAuth))
+		r.Use(jwtauth.Authenticator)
+
+		r.Get("//v1/users/{id}", func(w http.ResponseWriter, r *http.Request) {
+			_, claims, _ := jwtauth.FromContext(r.Context())
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
+		})
+	})
+
+	r.Group(func(r chi.Router) {
+		r.Get("/v1/users", s.createAccount)
+	})
 }
 
 func (s *server) startServer() {
@@ -118,6 +135,7 @@ func (s *server) startServer() {
 
 // New makes http endpoints and handler
 func New(h *handler.Handler, c *config.Config) {
+	tokenAuth = jwtauth.New("HS256", []byte("testtoken"), nil)
 	r := mux.NewRouter()
 	s := &server{
 		hand:    h,
