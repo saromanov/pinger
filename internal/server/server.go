@@ -36,7 +36,7 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "email or password is not defined", http.StatusBadRequest)
 		return
 	}
-	_, err = s.hand.CreateAccount(&models.Account{
+	token, id, err := s.hand.CreateAccount(&models.Account{
 		Email:    account.Email,
 		Password: account.Password,
 		Name:     account.Name,
@@ -48,7 +48,8 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	writeResponse(w, AccountResponse{
-		ID:          "123",
+		ID:          fmt.Sprintf("%d", id),
+		Token:       token,
 		CreatedTime: time.Now().UTC(),
 	})
 }

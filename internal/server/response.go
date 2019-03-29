@@ -11,6 +11,7 @@ import (
 // after creating of account
 type AccountResponse struct {
 	ID          string    `json:"id"`
+	Token       string    `json:"token"`
 	CreatedTime time.Time `json:"time"`
 }
 

@@ -13,20 +13,21 @@ var errNoPassword = errors.New("password is not defined")
 // CreateAccount provides creating of the new user
 // Its generate a new bassword with bcrypt library
 // and then, add to the storage
-func (h *Handler) CreateAccount(u *models.Account) (string, error) {
+func (h *Handler) CreateAccount(u *models.Account) (string, uint, error) {
 	if err := validateCreds(u); err != nil {
-		return "", err
+		return "", 0, err
 	}
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return "", errors.Wrap(err, "unable to hash password")
+		return "", 0, errors.Wrap(err, "unable to hash password")
 	}
 	u.Password = string(pass)
 
-	if _, err := h.Storage.InsertAccount(u); err != nil {
-		return "", errors.Wrap(err, "unable to create account")
+	id, err := h.Storage.InsertAccount(u)
+	if err != nil {
+		return "", 0, errors.Wrap(err, "unable to create account")
 	}
-	return createJWTToken(u), nil
+	return createJWTToken(u), id, nil
 }
 
 // Login provides auth for the user
