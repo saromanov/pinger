@@ -66,10 +66,16 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("unable to validate token: %v", err), http.StatusBadRequest)
 		return
 	}
+
+	acc, err := s.hand.GetAccount(userID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("unable to get account: %v", err), http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 	writeResponse(w, AccountResponse{
-		ID:          fmt.Sprintf("%d", id),
-		Token:       token,
+		ID:          fmt.Sprintf("%d", acc.ID),
 		CreatedTime: time.Now().UTC(),
 	})
 }
@@ -112,11 +118,7 @@ func (s *server) makeHandlers() {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/v1/users/{id}", func(w http.ResponseWriter, r *http.Request) {
-			tok, claims, err := jwtauth.FromContext(r.Context())
-			fmt.Println(tok, claims, err)
-			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
-		})
+		r.Get("/v1/users/{id}", s.getAccount)
 	})
 
 	s.router.Group(func(r chi.Router) {
