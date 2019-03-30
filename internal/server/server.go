@@ -57,6 +57,23 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// getAccount returns account by id
+func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	userID, err := s.getUserFromContextToken(r.Context())
+	if err != nil {
+		http.Error(w, fmt.Sprintf("unable to validate token: %v", err), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	writeResponse(w, AccountResponse{
+		ID:          fmt.Sprintf("%d", id),
+		Token:       token,
+		CreatedTime: time.Now().UTC(),
+	})
+}
+
 // createSite makes a new site for user
 func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 	site := &pb.Site{}

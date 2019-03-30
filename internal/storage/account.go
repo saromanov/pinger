@@ -18,7 +18,7 @@ func (s *Storage) InsertAccount(m interface{}) (uint, error) {
 // GetAccount returns account by id
 func (s *Storage) GetAccount(id string) (*models.Account, error) {
 	var acc *models.Account
-	err := s.db.Where("email = ?", id).First(&acc).Error
+	err := s.db.Where("id = ?", id).First(&acc).Error
 	if err != nil {
 		return nil, errors.Wrap(err, "storage: unable to get user")
 	}

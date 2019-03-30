@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/badoux/checkmail"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
@@ -28,6 +30,15 @@ func (h *Handler) CreateAccount(u *models.Account) (string, uint, error) {
 		return "", 0, errors.Wrap(err, "unable to create account")
 	}
 	return createJWTToken(u), id, nil
+}
+
+// GetAccount returns account by id
+func (h *Handler) GetAccount(id string) (*models.Account, error) {
+	acc, err := h.Storage.GetAccount(id)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get account: %v", err)
+	}
+	return acc, nil
 }
 
 // Login provides auth for the user
