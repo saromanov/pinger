@@ -77,6 +77,8 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, AccountResponse{
 		ID:          fmt.Sprintf("%d", acc.ID),
 		CreatedTime: time.Now().UTC(),
+		Name:        acc.Name,
+		Email:       acc.Email,
 	})
 }
 

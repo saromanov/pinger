@@ -13,6 +13,8 @@ type AccountResponse struct {
 	ID          string    `json:"id"`
 	Token       string    `json:"token"`
 	CreatedTime time.Time `json:"time"`
+	Name        string    `json:"name"`
+	Email       string    `json:"email"`
 }
 
 // write response
