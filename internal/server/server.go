@@ -128,18 +128,17 @@ func (s *server) makeHandlers() {
 
 // getUserFromContextToken returns user id based on jwt token
 // from context if token is not provides or invalid, it returns error
-func (s *server) getUserFromContextToken(con context.Context) (string, error) {
+func (s *server) getUserFromContextToken(con context.Context) (int, error) {
 	_, claims, err := jwtauth.FromContext(con)
 	if err != nil {
-		return "", fmt.Errorf("unable to get token: %v", err)
+		return 0, fmt.Errorf("unable to get token: %v", err)
 	}
-
-	user, ok := claims["UserId"]
+	user, ok := claims["UserID"]
 	if !ok {
-		return "", fmt.Errorf("unable to get user id from claims")
+		return 0, fmt.Errorf("unable to get user id from claims")
 	}
 
-	return user.(string), nil
+	return int(user.(float64)), nil
 
 }
 
