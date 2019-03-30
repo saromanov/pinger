@@ -96,7 +96,8 @@ func (s *server) makeHandlers() {
 		r.Use(jwtauth.Authenticator)
 
 		r.Get("/v1/users/{id}", func(w http.ResponseWriter, r *http.Request) {
-			_, claims, _ := jwtauth.FromContext(r.Context())
+			tok, claims, err := jwtauth.FromContext(r.Context())
+			fmt.Println(tok, claims, err)
 			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
 		})
 	})
@@ -104,6 +105,23 @@ func (s *server) makeHandlers() {
 	s.router.Group(func(r chi.Router) {
 		r.Post("/v1/users", s.createAccount)
 	})
+}
+
+// getUserFromContextToken returns user id based on jwt token
+// from context if token is not provides or invalid, it returns error
+func (s *server) getUserFromContextToken(con context.Context) (string, error) {
+	_, claims, err := jwtauth.FromContext(con)
+	if err != nil {
+		return "", fmt.Errorf("unable to get token: %v", err)
+	}
+
+	user, ok := claims["UserId"]
+	if !ok {
+		return "", fmt.Errorf("unable to get user id from claims")
+	}
+
+	return user.(string), nil
+
 }
 
 func (s *server) startServer() {
