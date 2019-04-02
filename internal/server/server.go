@@ -67,7 +67,7 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	acc, err := s.hand.GetAccount(userID)
+	acc, err := s.hand.GetAccount(userID, "")
 	if err != nil {
 		http.Error(w, fmt.Sprintf("unable to get account: %v", err), http.StatusBadRequest)
 		return

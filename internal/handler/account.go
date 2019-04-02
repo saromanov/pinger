@@ -33,8 +33,8 @@ func (h *Handler) CreateAccount(u *models.Account) (string, uint, error) {
 }
 
 // GetAccount returns account by id
-func (h *Handler) GetAccount(id int) (*models.Account, error) {
-	acc, err := h.Storage.GetAccount(id)
+func (h *Handler) GetAccount(id int, email string) (*models.Account, error) {
+	acc, err := h.Storage.GetAccount(id, email)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get account: %v", err)
 	}
@@ -44,7 +44,7 @@ func (h *Handler) GetAccount(id int) (*models.Account, error) {
 // Login provides auth for the user
 // It contains validation of email and generating of password hash
 func (h *Handler) Login(email, password string) (*models.Account, error) {
-	acc, err := h.Storage.GetAccount(0)
+	acc, err := h.Storage.GetAccount(0, email)
 	if err != nil {
 		return nil, err
 	}
