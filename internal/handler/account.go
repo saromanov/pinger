@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	errNoPassword = errors.New("password is not defined")
-	errNoEmail = errors.New("email is not defined")
+	errNoPassword   = errors.New("password is not defined")
+	errNoEmail      = errors.New("email is not defined")
+	errAccountExist = errors.New("account with such email already exist")
 )
 
 // CreateAccount provides creating of the new user
@@ -21,6 +22,9 @@ var (
 func (h *Handler) CreateAccount(u *models.Account) (string, uint, error) {
 	if err := validateCreds(u); err != nil {
 		return "", 0, err
+	}
+	if _, err := h.Storage.GetAccount(0, u.Email); err == nil {
+		return "", 0, errAccountExist
 	}
 	pass, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
