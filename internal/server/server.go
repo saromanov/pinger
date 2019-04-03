@@ -35,10 +35,6 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	if account.Email == "" && account.Password == "" {
-		http.Error(w, "email or password is not defined", http.StatusBadRequest)
-		return
-	}
 	token, id, err := s.hand.CreateAccount(&models.Account{
 		Email:    account.Email,
 		Password: account.Password,

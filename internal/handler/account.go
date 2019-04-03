@@ -10,7 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var errNoPassword = errors.New("password is not defined")
+var (
+	errNoPassword = errors.New("password is not defined")
+	errNoEmail = errors.New("email is not defined")
+)
 
 // CreateAccount provides creating of the new user
 // Its generate a new bassword with bcrypt library
@@ -76,6 +79,9 @@ func validateCreds(u *models.Account) error {
 
 // validateEmail provides validation of email format
 func validateEmail(email string) error {
+	if email == "" {
+		return errNoEmail
+	}
 	if err := checkmail.ValidateFormat(email); err != nil {
 		return errors.Wrap(err, "unable to validate email format")
 	}
