@@ -17,6 +17,12 @@ type AccountResponse struct {
 	Email       string    `json:"email"`
 }
 
+// ErrorResponse defines response after errors
+type ErrorResponse struct {
+	Message string `json:"message"`
+	Status  string `json:"status"	`
+}
+
 // write response
 func writeResponse(w http.ResponseWriter, obj interface{}) {
 	res, _ := json.Marshal(obj)
