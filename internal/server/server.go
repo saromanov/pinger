@@ -89,8 +89,16 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 
 // createSite makes a new site for user
 func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
+	userID, err := s.getUserFromContextToken(r.Context())
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to create site: %v", err),
+			Status:  "error",
+		})
+		return
+	}
 	site := &pb.Site{}
-	err := json.NewDecoder(r.Body).Decode(site)
+	err = json.NewDecoder(r.Body).Decode(site)
 	if err != nil {
 		return
 	}
@@ -99,10 +107,11 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_, err = s.hand.CreateSite(&models.Site{
-		URL: site.Url,
+		URL:    site.Url,
+		UserID: fmt.Sprintf("%d", userID),
 	})
 	if err != nil {
-		http.Error(w, fmt.Sprintf("unable to create account: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("unable to create site: %v", err), http.StatusBadRequest)
 		return
 	}
 
@@ -126,6 +135,7 @@ func (s *server) makeHandlers() {
 		r.Use(jwtauth.Authenticator)
 
 		r.Get("/v1/users/{id}", s.getAccount)
+		r.Post("/v1/sites", s.createSite)
 	})
 
 	s.router.Group(func(r chi.Router) {
