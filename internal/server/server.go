@@ -41,7 +41,10 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 		Name:     account.Name,
 	})
 	if err != nil {
-		http.Error(w, fmt.Sprintf("unable to create account: %v", err), http.StatusBadRequest)
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to create account: %v", err),
+			Status:  "error",
+		})
 		return
 	}
 
@@ -59,13 +62,19 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := s.getUserFromContextToken(r.Context())
 	if err != nil {
-		http.Error(w, fmt.Sprintf("unable to validate token: %v", err), http.StatusBadRequest)
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to validate token: %v", err),
+			Status:  "error",
+		})
 		return
 	}
 
 	acc, err := s.hand.GetAccount(userID, "")
 	if err != nil {
-		http.Error(w, fmt.Sprintf("unable to get account: %v", err), http.StatusBadRequest)
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to get account: %v", err),
+			Status:  "error",
+		})
 		return
 	}
 

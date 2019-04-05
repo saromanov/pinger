@@ -20,7 +20,7 @@ type AccountResponse struct {
 // ErrorResponse defines response after errors
 type ErrorResponse struct {
 	Message string `json:"message"`
-	Status  string `json:"status"	`
+	Status  string `json:"status"`
 }
 
 // write response
