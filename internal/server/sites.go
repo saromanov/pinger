@@ -29,7 +29,7 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "url is not defined", http.StatusBadRequest)
 		return
 	}
-	id, err = s.hand.CreateSite(&models.Site{
+	id, err := s.hand.CreateSite(&models.Site{
 		URL:    site.Url,
 		UserID: fmt.Sprintf("%d", userID),
 	})
