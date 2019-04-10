@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
 )
@@ -28,6 +30,19 @@ func (s *Storage) GetSites(req GetSitesRequest) ([]*models.Site, error) {
 		return s.getAllSites(req)
 	}
 	return s.getUserSites(req)
+}
+
+// GetSite return site by id
+func (s *Storage) GetSite(id int64) (*models.Site, error) {
+	if id == 0 {
+		return nil, fmt.Errorf("site is not defined")
+	}
+
+	var site *models.Site
+	if err := s.db.Where("id = ?", id).First(&site).Error; err != nil {
+		return nil, fmt.Errorf("unable to find site: %v", err)
+	}
+	return site, nil
 }
 
 // getAllSites needs for inner logic for checking site availibility
