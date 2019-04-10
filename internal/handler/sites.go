@@ -29,6 +29,16 @@ func (h *Handler) GetSites(r *pb.GetSitesRequest) ([]*pb.Site, error) {
 	return convertSitesToProto(sites), nil
 }
 
+// GetSite returns site by id
+func (h *Handler) GetSite(r *pb.GetSiteRequest) (*pb.Site, error) {
+	site, err := h.Storage.GetSite(r.Id)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get site")
+	}
+
+	return site, nil
+}
+
 func convertSitesToProto(sites []*models.Site) []*pb.Site {
 	result := make([]*pb.Site, len(sites))
 	for i, s := range sites {
