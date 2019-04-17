@@ -8,4 +8,5 @@ type Config struct {
 	Password string `yaml:"password"`
 	User     string `yaml:"user"`
 	Address  string `yaml:"address"`
+	Token    string `yaml:"token"`
 }

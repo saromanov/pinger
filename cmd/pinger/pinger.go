@@ -59,6 +59,9 @@ func main() {
 				if err != nil {
 					panic(err)
 				}
+				if config.Token == "" {
+					panic("token is not defined")
+				}
 				if err := run(config); err != nil {
 					panic(err)
 				}

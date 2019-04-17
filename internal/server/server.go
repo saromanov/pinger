@@ -145,7 +145,7 @@ func (s *server) startServer() {
 
 // New makes http endpoints and handler
 func New(h *handler.Handler, c *config.Config) {
-	tokenAuth = jwtauth.New("HS256", []byte("testtoken"), nil)
+	tokenAuth = jwtauth.New("HS256", []byte(c.Token), nil)
 	r := chi.NewRouter()
 	s := &server{
 		hand:    h,
