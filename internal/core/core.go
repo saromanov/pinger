@@ -48,6 +48,11 @@ func (c *Core) checker() {
 	}
 }
 
+// writeStat provides writing of the stat ingo after ping
+func (c *Core) writeStat() error {
+	return nil
+}
+
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
