@@ -36,16 +36,20 @@ func (h *Handler) GetSite(r *pb.GetSiteRequest) (*pb.Site, error) {
 		return nil, errors.Wrap(err, "unable to get site")
 	}
 
-	return site, nil
+	return convertSiteToProto(site), nil
 }
 
 func convertSitesToProto(sites []*models.Site) []*pb.Site {
 	result := make([]*pb.Site, len(sites))
 	for i, s := range sites {
-		result[i] = &pb.Site{
-			Url: s.URL,
-			Id:  int64(s.ID),
-		}
+		result[i] = convertSiteToProto(s)
 	}
 	return result
+}
+
+func convertSiteToProto(s *models.Site) *pb.Site {
+	return &pb.Site{
+		Url: s.URL,
+		Id:  int64(s.ID),
+	}
 }
