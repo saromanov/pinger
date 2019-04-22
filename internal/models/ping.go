@@ -13,4 +13,6 @@ type Ping struct {
 	ResponseTime time.Time
 	ResponseCode int
 	Available    bool
+	SiteID       int64
+	UserID       int64
 }
