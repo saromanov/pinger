@@ -14,3 +14,12 @@ func (s *Storage) InsertStat(m interface{}) (uint, error) {
 	}
 	return resp.ID, nil
 }
+
+// GetStats returns statictics of pings
+func GetStats()([]*models.Ping, error) {
+	var pings []*models.Ping
+	if err := s.db.Where().Find(&pings).Error {
+		return nil, fmt.Errorf("unable to find stats: %v", err)
+	}
+	return pings, nil
+}
