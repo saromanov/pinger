@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
@@ -19,7 +21,7 @@ func (s *Storage) InsertStat(m interface{}) (uint, error) {
 }
 
 // GetStats returns statictics of pings
-func GetStats(req *pb.GetStatsRequest)([]*models.Ping, error) {
+func (s *Storage) GetStats(req *pb.GetStatsRequest) ([]*models.Ping, error) {
 	if req.SiteID == 0 {
 		return nil, errNoSite
 	}
