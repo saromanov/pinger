@@ -3,7 +3,7 @@ package storage
 import (
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
-	"github.com/saromanov/pinger/proto"
+	pb "github.com/saromanov/pinger/proto"
 )
 
 var errNoSite = errors.New("site id is not defined")
@@ -19,12 +19,17 @@ func (s *Storage) InsertStat(m interface{}) (uint, error) {
 }
 
 // GetStats returns statictics of pings
-func GetStats(req *proto.GetStatRequest)([]*models.Ping, error) {
-	if req.SiteID == "" {
+func GetStats(req *pb.GetStatsRequest)([]*models.Ping, error) {
+	if req.SiteID == 0 {
 		return nil, errNoSite
 	}
+
+	r := &models.Ping{
+		SiteID: req.SiteID,
+		UserID: req.UserID,
+	}
 	var pings []*models.Ping
-	if err := s.db.Where().Find(&pings).Error; err != nil {
+	if err := s.db.Where(r).Find(&pings).Error; err != nil {
 		return nil, fmt.Errorf("unable to find stats: %v", err)
 	}
 	return pings, nil

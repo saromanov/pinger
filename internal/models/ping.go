@@ -14,5 +14,5 @@ type Ping struct {
 	ResponseCode int
 	Available    bool
 	SiteID       int64
-	UserID       int64
+	UserID       string
 }
