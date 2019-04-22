@@ -22,3 +22,8 @@ message GetSitesRequest {
 message GetSiteRequest {
     int64 id = 1;
 }
+
+message GetStatsRequest {
+    int64 siteID = 1;
+    string userID = 2;
+}
