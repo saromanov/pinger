@@ -17,7 +17,7 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	site, ok := r.URL.Query()["site_id"]
+	site, ok := r.URL.Query()["site"]
 	if !ok {
 		writeResponse(w, ErrorResponse{
 			Message: "site id is not defined",
