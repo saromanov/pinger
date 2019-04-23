@@ -95,6 +95,7 @@ func (s *server) makeHandlers() {
 
 		r.Get("/v1/users/{id}", s.getAccount)
 		r.Post("/v1/sites", s.createSite)
+		r.Get("/v1/stats", s.getStats)
 	})
 
 	s.router.Group(func(r chi.Router) {
