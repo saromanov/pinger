@@ -59,8 +59,10 @@ func (c *Core) checker() {
 }
 
 // writeStat provides writing of the stat ingo after ping
-func (c *Core) writeStat() error {
-	_, err := c.hand.CreateStat(&models.Ping{})
+func (c *Core) writeStat(duration time.Duration) error {
+	_, err := c.hand.CreateStat(&models.Ping{
+		ResponseTime duration, 
+	})
 	if err != nil {
 		return fmt.Errorf("unable to write stat: %v", err)
 	}

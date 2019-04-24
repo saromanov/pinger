@@ -10,7 +10,7 @@ import (
 // of the site availability
 type Ping struct {
 	gorm.Model
-	ResponseTime time.Time
+	ResponseTime time.Duration
 	ResponseCode int
 	Available    bool
 	SiteID       int64
