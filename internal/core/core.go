@@ -5,6 +5,7 @@ package core
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/robfig/cron"
 	"github.com/saromanov/pinger/internal/handler"
@@ -39,7 +40,15 @@ func (c *Core) checker() {
 		wg.Add(batches)
 		for _, site := range sites[it : it+20] {
 			go func(s *pb.Site) {
-				ping(s.Url)
+				start := time.Now()
+				err := ping(s.Url)
+				end := time.Since(start)
+				defer func(delta time.Duration) {
+					err := c.writeStat(end)
+					if err != nil {
+						log.Error(err.Error())
+					}
+				}(end)
 				wg.Done()
 			}(site)
 		}
