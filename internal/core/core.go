@@ -9,6 +9,7 @@ import (
 	"github.com/robfig/cron"
 	"github.com/saromanov/pinger/internal/handler"
 	"github.com/saromanov/pinger/internal/log"
+	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
 
@@ -50,13 +51,17 @@ func (c *Core) checker() {
 
 // writeStat provides writing of the stat ingo after ping
 func (c *Core) writeStat() error {
+	_, err := c.hand.CreateStat(&models.Ping{})
+	if err != nil {
+		return fmt.Errorf("unable to write stat: %v", err)
+	}
 	return nil
 }
 
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 3m", c.checker)
+	cr.AddFunc("@every 1", c.checker)
 	cr.Start()
 }
 
