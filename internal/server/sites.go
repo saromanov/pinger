@@ -48,6 +48,6 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("unable to marshal data: %v", err), http.StatusBadRequest)
 		return
 	}
-	fmt.Fprintf(w, string(data))
 	w.WriteHeader(http.StatusCreated)
+	fmt.Fprintf(w, string(data))
 }
