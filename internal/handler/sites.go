@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"fmt"
+	"net/url"
+
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
 	"github.com/saromanov/pinger/internal/storage"
@@ -10,7 +13,16 @@ import (
 // CreateSite provides creating of the new site
 // for checking of availability. It should be attached to user
 func (h *Handler) CreateSite(u *models.Site) (string, error) {
-	if err := h.Storage.InsertSite(u); err != nil {
+	if u.URL == "" {
+		return "", fmt.Errorf("url is not defined")
+	}
+
+	_, err := url.ParseRequestURI(u.URL)
+	if err != nil {
+		return "", fmt.Errorf("unable to parse url: %v", err)
+	}
+
+	if err = h.Storage.InsertSite(u); err != nil {
 		return "", errors.Wrap(err, "unable to create site")
 	}
 	return "", nil

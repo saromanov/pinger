@@ -13,6 +13,7 @@ var errNoSite = errors.New("site id is not defined")
 // InsertStat provides inserting of the ping stat
 func (s *Storage) InsertStat(m interface{}) (uint, error) {
 	resp := &models.Ping{}
+	fmt.Println(m)
 	err := s.db.Create(m).Scan(resp).Error
 	if err != nil {
 		return 0, errors.Wrap(err, "storage: unable to insert ping data")
