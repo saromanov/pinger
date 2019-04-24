@@ -43,12 +43,12 @@ func (c *Core) checker() {
 				start := time.Now()
 				err := ping(s.Url)
 				end := time.Since(start)
-				defer func(delta time.Duration) {
-					err := c.writeStat(end)
+				defer func(delta time.Duration, id int64) {
+					err := c.writeStat(end, id)
 					if err != nil {
 						log.Error(err.Error())
 					}
-				}(end)
+				}(end, site.Id)
 				wg.Done()
 			}(site)
 		}
@@ -59,9 +59,10 @@ func (c *Core) checker() {
 }
 
 // writeStat provides writing of the stat ingo after ping
-func (c *Core) writeStat(duration time.Duration) error {
+func (c *Core) writeStat(duration time.Duration, id int64) error {
 	_, err := c.hand.CreateStat(&models.Ping{
-		ResponseTime duration, 
+		ResponseTime: duration,
+		SiteID:       id,
 	})
 	if err != nil {
 		return fmt.Errorf("unable to write stat: %v", err)
