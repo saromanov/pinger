@@ -69,7 +69,7 @@ func (c *Core) checker() {
 // writeStat provides writing of the stat ingo after ping
 func (c *Core) writeStat(duration time.Duration, id int64, av bool) error {
 	_, err := c.hand.CreateStat(&models.Ping{
-		ResponseTime: duration,
+		ResponseTime: duration.Nanoseconds(),
 		SiteID:       id,
 		Available:    av,
 	})

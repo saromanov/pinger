@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -10,7 +8,7 @@ import (
 // of the site availability
 type Ping struct {
 	gorm.Model
-	ResponseTime time.Duration
+	ResponseTime int64
 	ResponseCode int
 	Available    bool
 	SiteID       int64
