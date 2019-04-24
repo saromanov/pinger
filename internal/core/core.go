@@ -35,10 +35,14 @@ func (c *Core) checker() {
 
 	batches := len(sites) / batchSize
 	it := 0
+	if batches == 0 {
+		batches = len(sites)
+	}
+	fmt.Println("BATCHES: ", batches, len(sites))
 	for i := 0; i < batches; i++ {
 		var wg sync.WaitGroup
 		wg.Add(batches)
-		for _, site := range sites[it : it+20] {
+		for _, site := range sites[it : it+batches] {
 			go func(s *pb.Site) {
 				start := time.Now()
 				available := true
