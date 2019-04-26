@@ -3,6 +3,9 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+
+	pb "github.com/saromanov/pinger/proto"
 )
 
 // getStats returns site statictics
@@ -26,6 +29,25 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(site)
+	parsedSite, err := strconv.ParseInt(site[0], 10, 64)
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: err.Error(),
+			Status:  "error",
+		})
+		return
+	}
+
+	resp, err := s.hand.GetStats(&pb.GetStatsRequest{
+		SiteID: parsedSite,
+	})
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: err.Error(),
+			Status:  "error",
+		})
+		return
+	}
+	fmt.Println(resp)
 	w.WriteHeader(http.StatusOK)
 }
