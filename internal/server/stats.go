@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -48,6 +49,11 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	fmt.Println(resp)
 	w.WriteHeader(http.StatusOK)
+	data, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("unable to marshal data: %v", err), http.StatusBadRequest)
+		return
+	}
+	fmt.Fprintf(w, string(data))
 }

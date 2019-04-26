@@ -7,6 +7,10 @@ import (
 	"github.com/saromanov/pinger/internal/models"
 )
 
+var (
+	errNoSite = errors.New("site is not defined")
+)
+
 // GetSitesRequest provides argument with params
 // for find sites
 type GetSitesRequest struct {
@@ -35,7 +39,7 @@ func (s *Storage) GetSites(req GetSitesRequest) ([]*models.Site, error) {
 // GetSite return site by id
 func (s *Storage) GetSite(id int64) (*models.Site, error) {
 	if id == 0 {
-		return nil, fmt.Errorf("site is not defined")
+		return nil, errNoSite
 	}
 
 	var site *models.Site
@@ -43,6 +47,19 @@ func (s *Storage) GetSite(id int64) (*models.Site, error) {
 		return nil, fmt.Errorf("unable to find site: %v", err)
 	}
 	return site, nil
+}
+
+// DeleteSite provides removing of the site
+func (s *Storage) DeleteSite(id int64) error {
+	if id == 0 {
+		return errNoSite
+	}
+
+	if err := s.db.Delete("id = ?", id).Error; err != nil {
+		return fmt.Errorf("unable to delete site: %v", err)
+	}
+
+	return nil
 }
 
 // getAllSites needs for inner logic for checking site availibility
