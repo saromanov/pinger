@@ -42,7 +42,7 @@ func (c *Core) checker() {
 	for i := 0; i < batches; i++ {
 		var wg sync.WaitGroup
 		wg.Add(batches)
-		for _, site := range sites[it : it+batches] {
+		for _, site := range sites[it : it+batches-1] {
 			go func(s *pb.Site) {
 				start := time.Now()
 				available := true
@@ -62,6 +62,9 @@ func (c *Core) checker() {
 		}
 
 		wg.Wait()
+		if it >= len(sites) {
+			break
+		}
 		it += 20
 	}
 }
