@@ -8,7 +8,7 @@ import (
 	pb "github.com/saromanov/pinger/proto"
 )
 
-var errNoSite = errors.New("site id is not defined")
+var errNoSiteID = errors.New("site id is not defined")
 
 // InsertStat provides inserting of the ping stat
 func (s *Storage) InsertStat(m interface{}) (uint, error) {
@@ -23,7 +23,7 @@ func (s *Storage) InsertStat(m interface{}) (uint, error) {
 // GetStats returns statictics of pings
 func (s *Storage) GetStats(req *pb.GetStatsRequest) ([]*models.PingData, error) {
 	if req.SiteID == 0 {
-		return nil, errNoSite
+		return nil, errNoSiteID
 	}
 
 	r := &models.PingData{
