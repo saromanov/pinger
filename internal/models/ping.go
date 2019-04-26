@@ -13,4 +13,5 @@ type PingData struct {
 	Available    bool
 	SiteID       int64
 	UserID       string
+	ErrorMessage string
 }
