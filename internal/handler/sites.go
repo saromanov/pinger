@@ -10,11 +10,13 @@ import (
 	pb "github.com/saromanov/pinger/proto"
 )
 
+var errNoUrl = errors.New("url is not defined")
+
 // CreateSite provides creating of the new site
 // for checking of availability. It should be attached to user
 func (h *Handler) CreateSite(u *models.Site) (string, error) {
 	if u.URL == "" {
-		return "", fmt.Errorf("url is not defined")
+		return "", errNoUrl
 	}
 
 	_, err := url.ParseRequestURI(u.URL)
