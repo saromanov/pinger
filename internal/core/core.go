@@ -38,7 +38,6 @@ func (c *Core) checker() {
 	if batches == 0 {
 		batches = len(sites)
 	}
-	fmt.Println("BATCHES: ", batches, len(sites))
 	for i := 0; i < batches; i++ {
 		var wg sync.WaitGroup
 		wg.Add(batches)
@@ -85,7 +84,7 @@ func (c *Core) writeStat(duration time.Duration, id int64, av bool) error {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1s", c.checker)
+	cr.AddFunc("@every 60s", c.checker)
 	cr.Start()
 }
 
