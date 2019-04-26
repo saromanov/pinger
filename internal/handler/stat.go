@@ -8,7 +8,7 @@ import (
 
 // CreateStat provides creating of the new site
 // for checking of availability. It should be attached to user
-func (h *Handler) CreateStat(u *models.Ping) (string, error) {
+func (h *Handler) CreateStat(u *models.PingData) (string, error) {
 	if _, err := h.Storage.InsertStat(u); err != nil {
 		return "", errors.Wrap(err, "unable to create site")
 	}
@@ -16,7 +16,7 @@ func (h *Handler) CreateStat(u *models.Ping) (string, error) {
 }
 
 // GetStats returns ping stat
-func (h *Handler) GetStats(req *pb.GetStatsRequest)([]*models.Ping, error) {
+func (h *Handler) GetStats(req *pb.GetStatsRequest) ([]*models.PingData, error) {
 	resp, err := h.Storage.GetStats(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to search stats")

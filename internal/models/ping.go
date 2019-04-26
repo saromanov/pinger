@@ -4,9 +4,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Ping represents model for storage data
+// PingData represents model for storage data
 // of the site availability
-type Ping struct {
+type PingData struct {
 	gorm.Model
 	ResponseTime int64
 	ResponseCode int

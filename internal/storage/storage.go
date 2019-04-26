@@ -39,7 +39,7 @@ func New(s *config.Config) (*Storage, error) {
 	}
 	db.AutoMigrate(&models.Site{})
 	db.AutoMigrate(&models.Account{})
-	db.AutoMigrate(&models.Ping{})
+	db.AutoMigrate(&models.PingData{})
 	return &Storage{
 		db: db,
 	}, nil

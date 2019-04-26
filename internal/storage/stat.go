@@ -12,7 +12,7 @@ var errNoSite = errors.New("site id is not defined")
 
 // InsertStat provides inserting of the ping stat
 func (s *Storage) InsertStat(m interface{}) (uint, error) {
-	resp := &models.Ping{}
+	resp := &models.PingData{}
 	err := s.db.Create(m).Scan(resp).Error
 	if err != nil {
 		return 0, errors.Wrap(err, "storage: unable to insert ping data")
@@ -21,16 +21,16 @@ func (s *Storage) InsertStat(m interface{}) (uint, error) {
 }
 
 // GetStats returns statictics of pings
-func (s *Storage) GetStats(req *pb.GetStatsRequest) ([]*models.Ping, error) {
+func (s *Storage) GetStats(req *pb.GetStatsRequest) ([]*models.PingData, error) {
 	if req.SiteID == 0 {
 		return nil, errNoSite
 	}
 
-	r := &models.Ping{
+	r := &models.PingData{
 		SiteID: req.SiteID,
 		UserID: req.UserID,
 	}
-	var pings []*models.Ping
+	var pings []*models.PingData
 	if err := s.db.Where(r).Find(&pings).Error; err != nil {
 		return nil, fmt.Errorf("unable to find stats: %v", err)
 	}
