@@ -53,6 +53,15 @@ func (h *Handler) GetSite(r *pb.GetSiteRequest) (*pb.Site, error) {
 	return convertSiteToProto(site), nil
 }
 
+func (h *Handler) DeleteSite(s int64) error {
+	err := h.Storage.DeleteSite(s)
+	if err != nil {
+		return errors.Wrap(err, "unable to get site")
+	}
+
+	return nil
+}
+
 func convertSitesToProto(sites []*models.Site) []*pb.Site {
 	result := make([]*pb.Site, len(sites))
 	for i, s := range sites {
