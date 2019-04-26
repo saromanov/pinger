@@ -87,7 +87,6 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
 func (s *server) makeHandlers() {
 	s.router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(tokenAuth))
