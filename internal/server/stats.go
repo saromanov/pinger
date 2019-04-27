@@ -14,28 +14,19 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	_, err := s.getUserFromContextToken(r.Context())
 	if err != nil {
-		writeResponse(w, ErrorResponse{
-			Message: fmt.Sprintf("unable to get stats: %v", err),
-			Status:  "error",
-		})
+		writeErrorResponse(w, fmt.Sprintf("unable to get stats: %v", err))
 		return
 	}
 
 	site, ok := r.URL.Query()["site"]
 	if !ok {
-		writeResponse(w, ErrorResponse{
-			Message: "site id is not defined",
-			Status:  "error",
-		})
+		writeErrorResponse(w, "site id is not defined")
 		return
 	}
 
 	parsedSite, err := strconv.ParseInt(site[0], 10, 64)
 	if err != nil {
-		writeResponse(w, ErrorResponse{
-			Message: err.Error(),
-			Status:  "error",
-		})
+		writeErrorResponse(w, err.Error())
 		return
 	}
 
@@ -43,16 +34,13 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 		SiteID: parsedSite,
 	})
 	if err != nil {
-		writeResponse(w, ErrorResponse{
-			Message: err.Error(),
-			Status:  "error",
-		})
+		writeErrorResponse(w, err.Error())
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	data, err := json.Marshal(resp)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("unable to marshal data: %v", err), http.StatusBadRequest)
+		writeErrorResponse(w, err.Error())
 		return
 	}
 	fmt.Fprintf(w, string(data))

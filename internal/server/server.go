@@ -56,6 +56,14 @@ func (s *server) getUserFromContextToken(con context.Context) (int, error) {
 
 }
 
+// writeErrorResponse writes error response
+func writeErrorResponse(w http.ResponseWriter, msg string) {
+	writeResponse(w, ErrorResponse{
+		Message: msg,
+		Status:  "error",
+	})
+}
+
 func (s *server) startServer() {
 	log.Infof("server is started at %s", s.address)
 	srv := &http.Server{
