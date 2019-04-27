@@ -53,6 +53,7 @@ func (h *Handler) GetSite(r *pb.GetSiteRequest) (*pb.Site, error) {
 	return convertSiteToProto(site), nil
 }
 
+// DeleteSite provides removing of the site
 func (h *Handler) DeleteSite(s int64) error {
 	err := h.Storage.DeleteSite(s)
 	if err != nil {

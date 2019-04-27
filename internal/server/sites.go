@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/saromanov/pinger/internal/models"
@@ -50,4 +51,41 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, string(data))
+}
+
+func (s *server) deleteSite(w http.ResponseWriter, r *http.Request) {
+	_, err := s.getUserFromContextToken(r.Context())
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to get stats: %v", err),
+			Status:  "error",
+		})
+		return
+	}
+
+	site, ok := r.URL.Query()["site"]
+	if !ok {
+		writeResponse(w, ErrorResponse{
+			Message: "site id is not defined",
+			Status:  "error",
+		})
+		return
+	}
+
+	parsedSite, err := strconv.ParseInt(site[0], 10, 64)
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: err.Error(),
+			Status:  "error",
+		})
+		return
+	}
+
+	if err := s.hand.DeleteSite(parsedSite); err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: err.Error(),
+			Status:  "error",
+		})
+		return
+	}
 }
