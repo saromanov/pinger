@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 
+	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"github.com/saromanov/pinger/internal/models"
 )
@@ -55,7 +56,11 @@ func (s *Storage) DeleteSite(id int64) error {
 		return errNoSite
 	}
 
-	if err := s.db.Delete("id = ?", id).Error; err != nil {
+	if err := s.db.Delete(&models.Site{
+		Model: gorm.Model{
+			ID: uint(id),
+		},
+	}).Error; err != nil {
 		return fmt.Errorf("unable to delete site: %v", err)
 	}
 
