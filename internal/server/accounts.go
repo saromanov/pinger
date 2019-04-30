@@ -43,6 +43,44 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	_, err := s.getUserFromContextToken(r.Context())
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to validate token: %v", err),
+			Status:  "error",
+		})
+		return
+	}
+
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	if !ok {
+		w.WriteHeader(http.StatusBadRequest)
+		jsonapi.WriteBasicError(w, "400", "id parameter is not defined", "Check authorization token")
+		return
+	}
+
+	acc, err := s.hand.GetAccount(id, "")
+	if err != nil {
+		writeResponse(w, ErrorResponse{
+			Message: fmt.Sprintf("unable to get account: %v", err),
+			Status:  "error",
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	writeResponse(w, AccountResponse{
+		ID:          fmt.Sprintf("%d", acc.ID),
+		CreatedTime: time.Now().UTC(),
+		Name:        acc.Name,
+		Email:       acc.Email,
+	})
+}
+
+func (s *server) me(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	userID, err := s.getUserFromContextToken(r.Context())
 	if err != nil {
 		writeResponse(w, ErrorResponse{
