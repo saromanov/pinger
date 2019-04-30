@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
@@ -55,12 +57,16 @@ func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
-		jsonapi.WriteBasicError(w, "400", "id parameter is not defined", "Check authorization token")
+		writeErrorResponse(w, "id is not defined")
 		return
 	}
 
-	acc, err := s.hand.GetAccount(id, "")
+	parsedInt, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		writeErrorResponse(w, err.Error())
+		return
+	}
+	acc, err := s.hand.GetAccount(int(parsedInt), "")
 	if err != nil {
 		writeResponse(w, ErrorResponse{
 			Message: fmt.Sprintf("unable to get account: %v", err),
