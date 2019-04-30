@@ -44,20 +44,18 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 // getAccount returns account by id
 func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	if !ok {
+		writeErrorResponse(w, "id is not defined")
+		return
+	}
 	_, err := s.getUserFromContextToken(r.Context())
 	if err != nil {
 		writeResponse(w, ErrorResponse{
 			Message: fmt.Sprintf("unable to validate token: %v", err),
 			Status:  "error",
 		})
-		return
-	}
-
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
-		writeErrorResponse(w, "id is not defined")
 		return
 	}
 
