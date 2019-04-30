@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
+	"github.com/gorilla/mux"
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
