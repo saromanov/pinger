@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
@@ -44,9 +44,8 @@ func (s *server) createAccount(w http.ResponseWriter, r *http.Request) {
 // getAccount returns account by id
 func (s *server) getAccount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
+	id := chi.URLParam(r, "id")
+	if id == "" {
 		writeErrorResponse(w, "id is not defined")
 		return
 	}

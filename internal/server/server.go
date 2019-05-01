@@ -29,7 +29,7 @@ func (s *server) makeHandlers() {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/v1/users/{id}", s.getAccount)
+		r.Get("/v1/users/{id:[0-9]+}", s.getAccount)
 		r.Get("/v1/me", s.me)
 		r.Post("/v1/sites", s.createSite)
 		r.Get("/v1/stats", s.getStats)
