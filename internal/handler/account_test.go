@@ -30,8 +30,17 @@ func init() {
 	hand = handTmp
 }
 
-func TestCreateAccount(t *testing.T) {
-	m := &models.Account{}
-	_, _, err := hand.CreateAccount(m)
+func TestCreateFailedAccount(t *testing.T) {
+	_, _, err := hand.CreateAccount(&models.Account{})
 	assert.Error(t, err, "should return error")
+
+	_, _, err = hand.CreateAccount(&models.Account{Email: "123@mail.ru"})
+	assert.Error(t, err, "should return error")
+
+	_, _, err = hand.CreateAccount(&models.Account{Email: "mail.ru"})
+	assert.Error(t, err, "should return error")
+
+	_, _, err = hand.CreateAccount(&models.Account{Password: "123"})
+	assert.Error(t, err, "should return error")
+
 }
