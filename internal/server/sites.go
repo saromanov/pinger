@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/saromanov/pinger/internal/models"
 	pb "github.com/saromanov/pinger/proto"
 )
@@ -63,16 +64,13 @@ func (s *server) deleteSite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	site, ok := r.URL.Query()["site"]
-	if !ok {
-		writeResponse(w, ErrorResponse{
-			Message: "site id is not defined",
-			Status:  "error",
-		})
+	site := chi.URLParam(r, "id")
+	if site == "" {
+		writeErrorResponse(w, "id is not defined")
 		return
 	}
 
-	parsedSite, err := strconv.ParseInt(site[0], 10, 64)
+	parsedSite, err := strconv.ParseInt(site, 10, 64)
 	if err != nil {
 		writeResponse(w, ErrorResponse{
 			Message: err.Error(),
