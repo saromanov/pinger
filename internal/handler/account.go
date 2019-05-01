@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	errNoPassword   = errors.New("password is not defined")
-	errNoEmail      = errors.New("email is not defined")
-	errAccountExist = errors.New("account with such email already exist")
+	errNoPassword    = errors.New("password is not defined")
+	errNoEmail       = errors.New("email is not defined")
+	errAccountExist  = errors.New("account with such email already exist")
+	errAccountNoName = errors.New("account not have a name")
 )
 
 // CreateAccount provides creating of the new user
@@ -77,7 +78,9 @@ func validateCreds(u *models.Account) error {
 	if u.Password == "" {
 		return errNoPassword
 	}
-
+	if u.Name == "" {
+		return errAccountNoName
+	}
 	return nil
 }
 
