@@ -33,7 +33,7 @@ func (s *server) makeHandlers() {
 		r.Get("/v1/me", s.me)
 		r.Post("/v1/sites", s.createSite)
 		r.Get("/v1/stats", s.getStats)
-		r.Delete("/v1/stats", s.deleteSite)
+		r.Delete("/v1/stats/{id}", s.deleteSite)
 	})
 
 	s.router.Group(func(r chi.Router) {
