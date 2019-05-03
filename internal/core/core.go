@@ -55,8 +55,8 @@ func (c *Core) checker() {
 					if err != nil {
 						log.Error(err.Error())
 					}
+					wg.Done()
 				}(end, site.Id, available, err)
-				wg.Done()
 			}(site)
 		}
 
@@ -64,7 +64,7 @@ func (c *Core) checker() {
 		if it >= len(sites) {
 			break
 		}
-		it += 20
+		it += batchSize
 	}
 }
 
