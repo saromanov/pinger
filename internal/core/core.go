@@ -27,7 +27,6 @@ func (c *Core) checker() {
 	if err != nil {
 		panic(fmt.Sprintf("unable to get list of sites: %v", err))
 	}
-
 	if len(sites) == 0 {
 		log.Info("core: site's db is empty")
 		return
@@ -41,10 +40,11 @@ func (c *Core) checker() {
 	for i := 0; i < batches; i++ {
 		var wg sync.WaitGroup
 		wg.Add(batches)
-		for _, site := range sites[it : it+batches-1] {
+		for _, site := range sites[it : it+batches] {
 			go func(s *pb.Site) {
 				start := time.Now()
 				err := ping(s.Url)
+				fmt.Println(s.Url)
 				end := time.Since(start)
 				defer func(delta time.Duration, id int64, e error) {
 					err := c.writeStat(end, id, e)
@@ -86,7 +86,7 @@ func (c *Core) writeStat(duration time.Duration, id int64, e error) error {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1m", c.checker)
+	cr.AddFunc("@every 1s", c.checker)
 	cr.Start()
 }
 
