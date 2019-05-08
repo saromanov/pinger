@@ -44,19 +44,15 @@ func (c *Core) checker() {
 		for _, site := range sites[it : it+batches-1] {
 			go func(s *pb.Site) {
 				start := time.Now()
-				available := true
 				err := ping(s.Url)
-				if err != nil {
-					available = false
-				}
 				end := time.Since(start)
-				defer func(delta time.Duration, id int64, av bool, e error) {
-					err := c.writeStat(end, id, av, e)
+				defer func(delta time.Duration, id int64, e error) {
+					err := c.writeStat(end, id, e)
 					if err != nil {
 						log.Error(err.Error())
 					}
 					wg.Done()
-				}(end, site.Id, available, err)
+				}(end, site.Id, err)
 			}(site)
 		}
 
@@ -69,14 +65,14 @@ func (c *Core) checker() {
 }
 
 // writeStat provides writing of the stat ingo after ping
-func (c *Core) writeStat(duration time.Duration, id int64, av bool, e error) error {
+func (c *Core) writeStat(duration time.Duration, id int64, e error) error {
 	res := &models.PingData{
-		SiteID:    id,
-		Available: av,
+		SiteID: id,
 	}
 	if e != nil {
 		res.ErrorMessage = e.Error()
 	} else {
+		res.Available = true
 		res.ResponseTime = duration.Nanoseconds()
 	}
 	_, err := c.hand.CreateStat(res)
