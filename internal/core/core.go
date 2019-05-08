@@ -33,14 +33,17 @@ func (c *Core) checker() {
 	}
 
 	batches := len(sites) / batchSize
+	iters := batches
 	it := 0
 	if batches == 0 {
 		batches = len(sites)
+		iters = 1
 	}
-	for i := 0; i < batches; i++ {
+	for i := 0; i < iters; i++ {
 		var wg sync.WaitGroup
 		wg.Add(batches)
 		for _, site := range sites[it : it+batches] {
+			fmt.Println("SITE: ", site)
 			go func(s *pb.Site) {
 				start := time.Now()
 				err := ping(s.Url)
@@ -53,6 +56,9 @@ func (c *Core) checker() {
 					wg.Done()
 				}(end, site.Id, err)
 			}(site)
+			if it >= len(sites) {
+				break
+			}
 		}
 
 		wg.Wait()
