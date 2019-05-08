@@ -14,7 +14,7 @@ import (
 	pb "github.com/saromanov/pinger/proto"
 )
 
-const batchSize = 20
+var batchSize = 20
 
 // Core defines struct for main logic
 type Core struct {
@@ -39,10 +39,14 @@ func (c *Core) checker() {
 		batches = len(sites)
 		iters = 1
 	}
+
+	if len(sites) < 20 {
+		batchSize = len(sites)
+	}
 	for i := 0; i < iters; i++ {
 		var wg sync.WaitGroup
-		wg.Add(batches)
-		for _, site := range sites[it : it+batches] {
+		wg.Add(batchSize)
+		for _, site := range sites[it : it+batchSize] {
 			fmt.Println("SITE: ", site)
 			go func(s *pb.Site) {
 				start := time.Now()
