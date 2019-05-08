@@ -44,3 +44,12 @@ func TestCreateFailedAccount(t *testing.T) {
 	assert.EqualError(t, err, errNoEmail.Error(), "should return error")
 
 }
+
+func TestCreateAccountCompleted(t *testing.T) {
+	_, _, err := hand.CreateAccount(&models.Account{
+		Email:    "123@mail.ru",
+		Password: "1234567",
+		Name:     "foobar",
+	})
+	assert.NoError(t, err, "should't return error")
+}
