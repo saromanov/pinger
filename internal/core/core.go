@@ -44,7 +44,6 @@ func (c *Core) checker() {
 			go func(s *pb.Site) {
 				start := time.Now()
 				err := ping(s.Url)
-				fmt.Println(s.Url)
 				end := time.Since(start)
 				defer func(delta time.Duration, id int64, e error) {
 					err := c.writeStat(end, id, e)

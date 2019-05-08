@@ -40,7 +40,7 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := &AccountResponse{
+	resp := &SiteResponse{
 		CreatedTime: time.Now().UTC(),
 		ID:          id,
 	}
