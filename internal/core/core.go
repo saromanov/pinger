@@ -83,13 +83,14 @@ func (c *Core) writeStat(duration time.Duration, id int64, av bool, e error) err
 	if err != nil {
 		return fmt.Errorf("unable to write stat: %v", err)
 	}
+	log.Infof("Write statistics for site: %d", id)
 	return nil
 }
 
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 60s", c.checker)
+	cr.AddFunc("@every 1m", c.checker)
 	cr.Start()
 }
 
