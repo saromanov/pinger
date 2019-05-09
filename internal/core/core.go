@@ -47,7 +47,6 @@ func (c *Core) checker() {
 		var wg sync.WaitGroup
 		wg.Add(batchSize)
 		for _, site := range sites[it : it+batchSize] {
-			fmt.Println("SITE: ", site)
 			go func(s *pb.Site) {
 				start := time.Now()
 				err := ping(s.Url)
@@ -95,7 +94,7 @@ func (c *Core) writeStat(duration time.Duration, id int64, e error) error {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1s", c.checker)
+	cr.AddFunc("@every 1m", c.checker)
 	cr.Start()
 }
 
