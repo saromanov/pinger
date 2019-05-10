@@ -23,3 +23,8 @@ func (h *Handler) GetStats(req *pb.GetStatsRequest) ([]*models.PingData, error) 
 	}
 	return resp, nil
 }
+
+// AggregateStats returns counting of the stats by request
+func (h *Handler) AggregateStats(req *pb.CountStatRequest) (*pb.CountStatResponse, error) {
+	return h.Storage.CountStats(req)
+}
