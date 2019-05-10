@@ -57,7 +57,7 @@ func (c *Core) checker() {
 						log.Error(err.Error())
 					}
 					wg.Done()
-				}(end, site.Id, err)
+				}(end, s.Id, err)
 			}(site)
 			if it >= len(sites) {
 				break
@@ -94,7 +94,7 @@ func (c *Core) writeStat(duration time.Duration, id int64, e error) error {
 // startCron provides starting of the cron worker
 func (c *Core) startCron() {
 	cr := cron.New()
-	cr.AddFunc("@every 1m", c.checker)
+	cr.AddFunc("@every 1s", c.checker)
 	cr.Start()
 }
 
