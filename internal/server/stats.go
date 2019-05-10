@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi"
 	pb "github.com/saromanov/pinger/proto"
 )
 
@@ -48,13 +47,13 @@ func (s *server) getStats(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) aggregateStats(w http.ResponseWriter, r *http.Request) {
-	siteID := chi.URLParam(r, "siteID")
-	if siteID == "" {
+	siteID, ok := r.URL.Query()["site"]
+	if !ok {
 		writeErrorResponse(w, "site id is not defined")
 		return
 	}
 
-	parsedSite, err := strconv.ParseInt(siteID, 10, 64)
+	parsedSite, err := strconv.ParseInt(siteID[0], 10, 64)
 	if err != nil {
 		writeErrorResponse(w, err.Error())
 		return
