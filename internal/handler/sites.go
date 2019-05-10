@@ -14,20 +14,21 @@ var errNoUrl = errors.New("url is not defined")
 
 // CreateSite provides creating of the new site
 // for checking of availability. It should be attached to user
-func (h *Handler) CreateSite(u *models.Site) (string, error) {
+func (h *Handler) CreateSite(u *models.Site) (uint, error) {
 	if u.URL == "" {
-		return "", errNoUrl
+		return 0, errNoUrl
 	}
 
 	_, err := url.ParseRequestURI(u.URL)
 	if err != nil {
-		return "", fmt.Errorf("unable to parse url: %v", err)
+		return 0, fmt.Errorf("unable to parse url: %v", err)
 	}
 
-	if err = h.Storage.InsertSite(u); err != nil {
-		return "", errors.Wrap(err, "unable to create site")
+	id, err := h.Storage.InsertSite(u)
+	if err != nil {
+		return 0, errors.Wrap(err, "unable to create site")
 	}
-	return "", nil
+	return id, nil
 }
 
 // GetSites returns list of the sites based on request

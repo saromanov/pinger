@@ -42,7 +42,7 @@ func (s *server) createSite(w http.ResponseWriter, r *http.Request) {
 
 	resp := &SiteResponse{
 		CreatedTime: time.Now().UTC(),
-		ID:          id,
+		ID:          fmt.Sprintf("%d", id),
 	}
 
 	data, err := json.Marshal(resp)

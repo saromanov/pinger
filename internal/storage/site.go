@@ -21,12 +21,13 @@ type GetSitesRequest struct {
 }
 
 // InsertSite provides inserting of site
-func (s *Storage) InsertSite(m interface{}) error {
-	err := s.db.Create(m).Error
+func (s *Storage) InsertSite(m interface{}) (uint, error) {
+	resp := &models.Site{}
+	err := s.db.Create(m).Scan(resp).Error
 	if err != nil {
-		return errors.Wrap(err, "storage: unable to insert site")
+		return 0, errors.Wrap(err, "storage: unable to insert site")
 	}
-	return nil
+	return resp.ID, nil
 }
 
 // GetSites returns list of sites
