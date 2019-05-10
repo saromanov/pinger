@@ -45,7 +45,7 @@ func (s *Storage) CountStats(req *pb.CountStatRequest) (*pb.CountStatResponse, e
 	}
 
 	var totalCount int64
-	if err := s.db.Table("ping_data").Where("site_id=? AND available=true", req.SiteID).Count(&totalCount).Error; err != nil {
+	if err := s.db.Table("ping_data").Where("site_id=?", req.SiteID).Count(&totalCount).Error; err != nil {
 		return nil, fmt.Errorf("unable to count site availability")
 	}
 
