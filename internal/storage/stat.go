@@ -39,18 +39,18 @@ func (s *Storage) GetStats(req *pb.GetStatsRequest) ([]*models.PingData, error) 
 
 // CountStats provides aggregation of the statistics from pings
 func (s *Storage) CountStats(req *pb.CountStatRequest) (*pb.CountStatResponse, error) {
-	var availbleCount int
-	if err := s.db.Table("pingdata").Where("site=? AND available=true", req.SiteId).Count(&availbleCount).Error; err != nil {
+	var availbleCount int64
+	if err := s.db.Table("pingdata").Where("site=? AND available=true", req.SiteID).Count(&availbleCount).Error; err != nil {
 		return nil, fmt.Errorf("unable to count site availability")
 	}
 
-	var totalCount int
-	if err := s.db.Table("pingdata").Where("site=? AND available=true", req.SiteId).Count(&totalCount).Error; err != nil {
+	var totalCount int64
+	if err := s.db.Table("pingdata").Where("site=? AND available=true", req.SiteID).Count(&totalCount).Error; err != nil {
 		return nil, fmt.Errorf("unable to count site availability")
 	}
 
-	return nil, &pb.CountStatResponse{
-		Available: availbleCount,
-		Total:     totalCount,
-	}
+	return &pb.CountStatResponse{
+		AvailableCount: availbleCount,
+		TotalCount:     totalCount,
+	}, nil
 }
